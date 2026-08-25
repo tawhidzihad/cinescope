@@ -135,6 +135,14 @@
       box-shadow: 0 0 0 3px var(--accent-primary-glow);
       background-color: var(--bg-surface);
     }
+
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+    }
+
+    &::-webkit-search-decoration {
+      -webkit-appearance: none;
+    }
   }
 
   .search-icon {
@@ -270,6 +278,7 @@
       width: 20px;
       height: 20px;
       color: var(--text-muted);
+      pointer-events: none;
     }
   }
 
