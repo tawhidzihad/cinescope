@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="CineScope - Discover top English movies, ratings, genres, and cinematic stories with our modern and responsive movie discovery platform." />
+  <meta name="theme-color" content="#0b0f17" />
+  <title>CineScope - Modern English Movie Discovery</title>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap"
+    rel="stylesheet" />
+
+  <!-- Compiled Stylesheet -->
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+
+<body>
+  <!-- Accessibility Skip Link -->
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- Global Header & Navbar -->
+  <header class="header">
+    <div class="container navbar">
+      <!-- Brand Logo -->
+      <a href="#" class="brand" aria-label="CineScope Home">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+            <line x1="7" y1="2" x2="7" y2="22" />
+            <line x1="17" y1="2" x2="17" y2="22" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <line x1="2" y1="7" x2="7" y2="7" />
+            <line x1="2" y1="17" x2="7" y2="17" />
+            <line x1="17" y1="17" x2="22" y2="17" />
+            <line x1="17" y1="7" x2="22" y2="7" />
+          </svg>
+        </span>
+        <span>CINE<span class="brand-highlight">SCOPE</span></span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#discoverSection" class="nav-link" data-nav-action="discover">Discover</a>
+        <a href="#discoverSection" class="nav-link" data-nav-action="top-rated">Top Rated</a>
+        <a href="#discoverSection" class="nav-link" data-nav-action="genres">Genres</a>
+      </nav>
+
+      <!-- Nav Controls -->
+      <div class="nav-controls">
+        <!-- Live Search Input -->
+        <div class="nav-search" role="search">
+          <label for="desktopSearchInput" class="visually-hidden"
+            style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;">Search
+            movies</label>
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="search" id="desktopSearchInput" class="search-input" placeholder="Search movies, cast..."
+            autocomplete="off" aria-label="Search movies by title, cast, or director" />
+          <button type="button" class="search-clear-btn" aria-label="Clear search query">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Theme Toggle Button -->
+        <button type="button" class="theme-toggle" aria-label="Switch theme mode" title="Toggle dark or light theme">
+          <!-- Sun Icon for Light Mode -->
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <!-- Moon Icon for Dark Mode -->
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu"
+          aria-expanded="false" aria-controls="mobileDrawer">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+      <div class="mobile-search" role="search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="search" id="mobileSearchInput" class="search-input" placeholder="Search movies, cast..."
+          autocomplete="off" aria-label="Search movies in mobile drawer" />
+        <button type="button" class="search-clear-btn" aria-label="Clear mobile search query">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <nav class="mobile-nav-links" aria-label="Mobile Navigation">
+        <a href="#discoverSection" class="mobile-nav-link" data-nav-action="discover">Discover Movies</a>
+        <a href="#discoverSection" class="mobile-nav-link" data-nav-action="top-rated">Top Rated</a>
+        <a href="#discoverSection" class="mobile-nav-link" data-nav-action="genres">Browse by Genre</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent">
+    <!-- Cinematic Hero Section — content populated dynamically by JS -->
+    <section class="hero-section" id="heroSection" aria-label="Featured Movie Spotlight">
+      <div class="hero-backdrop">
+        <img id="heroBackdropImg" src="" alt="" fetchpriority="high"
+          onerror="this.onerror=null; this.src='./assets/images/poster-fallback.svg';" />
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-content" id="heroContent">
+          <div class="hero-spotlight-badge">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            Featured Spotlight
+          </div>
+
+          <h1 class="hero-title" id="heroTitle"></h1>
+
+          <div class="hero-meta" id="heroMeta"></div>
+
+          <p class="hero-description" id="heroDescription"></p>
+
+          <div class="hero-actions">
+            <button type="button" class="btn btn-primary" id="heroDetailsBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+              View Movie Details
+            </button>
+            <button type="button" class="btn btn-glass" id="heroExploreBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+              Explore Catalog
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Movie Discovery & Browse Section -->
+    <section class="movies-section" id="discoverSection" aria-label="Discover Movies">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Curated Cinema</span>
+          <h2 class="section-title">Discover Movies</h2>
+          <p class="section-desc">Explore critically acclaimed English-language cinema with high-definition details and
+            ratings.</p>
+        </div>
+
+        <!-- Discovery Filter & Sort Toolbar -->
+        <div class="discovery-toolbar">
+          <!-- Genre Pills -->
+          <div class="filter-pills" id="genrePills" role="toolbar" aria-label="Filter movies by genre">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <!-- Controls: Results Count & Sort Dropdown -->
+          <div class="toolbar-controls">
+            <div class="results-count" id="resultsCount" aria-live="polite">
+              Showing <span class="count-highlight">16</span> of 16 movies
+            </div>
+            <div class="sort-wrapper">
+              <label for="sortSelect">Sort By:</label>
+              <select id="sortSelect" class="sort-select" aria-label="Sort movies list">
+                <option value="rating-desc">Highest Rated</option>
+                <option value="year-desc">Newest Release</option>
+                <option value="title-asc">Title (A - Z)</option>
+                <option value="title-desc">Title (Z - A)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Movie Cards Grid Container -->
+        <div class="movies-grid" id="moviesGrid" aria-label="Movie Collection">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Movie Details Modal Overlay -->
+  <div class="modal-backdrop" id="movieModal" role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="modalTitle">
+    <div class="modal-dialog" id="modalDialog">
+      <!-- Close Modal Button -->
+      <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="Close movie details dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <!-- Modal Hero Backdrop Banner -->
+      <div class="modal-hero">
+        <img id="modalHeroImg" src="" alt="Movie backdrop" />
+        <div class="modal-hero-overlay"></div>
+      </div>
+
+      <!-- Modal Content Body -->
+      <div class="modal-body">
+        <!-- Left Column: Poster -->
+        <div class="modal-poster-col">
+          <img id="modalPosterImg" class="modal-poster-img" src="" alt="Movie poster" />
+        </div>
+
+        <!-- Right Column: Details & Metadata -->
+        <div class="modal-info-col">
+          <div class="modal-header-meta">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-badges">
+              <div class="modal-rating-badge" aria-label="Rating">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+                <span id="modalRating"></span>
+              </div>
+              <span class="modal-meta-item" id="modalVotes"></span>
+              <span class="modal-meta-item">•</span>
+              <span class="modal-meta-item" id="modalYear"></span>
+              <span class="modal-meta-item">•</span>
+              <span class="modal-meta-item" id="modalDuration"></span>
+            </div>
+          </div>
+
+          <p class="modal-tagline" id="modalTagline"></p>
+
+          <div class="modal-badges" id="modalGenres"></div>
+
+          <p class="modal-synopsis" id="modalOverview"></p>
+
+          <!-- Crew & Cast Info -->
+          <div class="modal-crew-grid">
+            <div class="crew-item">
+              <span class="crew-label">Director</span>
+              <span class="crew-value" id="modalDirector"></span>
+            </div>
+            <div class="crew-item">
+              <span class="crew-label">Starring Cast</span>
+              <span class="crew-value" id="modalCast"></span>
+            </div>
+          </div>
+
+          <!-- Interactive Modal Actions -->
+          <div class="modal-actions">
+            <button type="button" class="btn btn-primary" id="modalTrailerBtn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              Watch Trailer
+            </button>
+            <button type="button" class="btn btn-secondary" id="modalWatchlistBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+              Add to Watchlist
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="#" class="brand" aria-label="CineScope Home">
+            <span class="brand-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+                <line x1="7" y1="2" x2="7" y2="22" />
+                <line x1="17" y1="2" x2="17" y2="22" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+              </svg>
+            </span>
+            <span>CINE<span class="brand-highlight">SCOPE</span></span>
+          </a>
+          <p>An English movie discovery platform built with clean, standards-compliant web technologies and cinematic UI
+            design.</p>
+        </div>
+
+        <div class="footer-tech-stack">
+          <span class="tech-label">Architecture & Stack</span>
+          <div class="tech-badges">
+            <span class="tech-badge">HTML5 Semantic</span>
+            <span class="tech-badge">SCSS 7-1 Modular</span>
+            <span class="tech-badge">Vanilla JavaScript ES6+</span>
+            <span class="tech-badge">WCAG 2.1 AA</span>
+            <span class="tech-badge">Zero Frameworks</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 CineScope. Crafted with senior frontend excellence.</p>
+        <a href="#mainContent" class="back-to-top" aria-label="Scroll back to top of page">
+          Back to top
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="m18 15-6-6-6 6" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Entry Point -->
+  <script type="module" src="./js/main.js"></script>
+</body>
+
+</html>

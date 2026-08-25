@@ -1,0 +1,202 @@
+// ==========================================================================
+// Global Styles & Theme Variables
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Dark Theme (Default)
+:root,
+[data-theme="dark"] {
+  --bg-primary: #0b0f17;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #1a2234;
+  --bg-card: #151d2d;
+  --bg-card-hover: #1f2a3f;
+  
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  
+  --accent-primary: #e50914;
+  --accent-primary-hover: #f40612;
+  --accent-primary-glow: rgba(229, 9, 20, 0.35);
+  --accent-secondary: #3b82f6;
+  --accent-gold: #f59e0b;
+  
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color-hover: rgba(255, 255, 255, 0.16);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  
+  --glass-bg: rgba(17, 24, 39, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --modal-backdrop: rgba(3, 7, 18, 0.85);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px rgba(229, 9, 20, 0.25);
+
+  --gradient-accent: linear-gradient(135deg, #e50914 0%, #ff334b 100%);
+  --gradient-hero-overlay: linear-gradient(180deg, rgba(11, 15, 23, 0.3) 0%, rgba(11, 15, 23, 0.8) 70%, #0b0f17 100%);
+  --gradient-card-overlay: linear-gradient(180deg, transparent 40%, rgba(11, 15, 23, 0.95) 100%);
+  
+  --badge-bg: rgba(255, 255, 255, 0.08);
+  --badge-text: #e2e8f0;
+}
+
+// Light Theme
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  
+  --accent-primary: #dc2626;
+  --accent-primary-hover: #b91c1c;
+  --accent-primary-glow: rgba(220, 38, 38, 0.2);
+  --accent-secondary: #2563eb;
+  --accent-gold: #d97706;
+  
+  --border-color: rgba(15, 23, 42, 0.08);
+  --border-color-hover: rgba(15, 23, 42, 0.16);
+  --border-subtle: rgba(15, 23, 42, 0.04);
+  
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --modal-backdrop: rgba(15, 23, 42, 0.65);
+
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.12);
+  --shadow-glow: 0 0 20px rgba(220, 38, 38, 0.15);
+
+  --gradient-accent: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  --gradient-hero-overlay: linear-gradient(180deg, rgba(248, 250, 252, 0.2) 0%, rgba(248, 250, 252, 0.85) 70%, #f8fafc 100%);
+  --gradient-card-overlay: linear-gradient(180deg, transparent 40%, rgba(15, 23, 42, 0.9) 100%);
+  
+  --badge-bg: #e2e8f0;
+  --badge-text: #334155;
+}
+
+// Layout Container
+.container {
+  width: 100%;
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $spacing-4;
+  padding-right: $spacing-4;
+
+  @include respond-to('md') {
+    padding-left: $spacing-6;
+    padding-right: $spacing-6;
+  }
+
+  @include respond-to('xl') {
+    padding-left: $spacing-8;
+    padding-right: $spacing-8;
+  }
+}
+
+// Focus Visible Accessibility Outline
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+// Skip Link for Accessibility
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: $spacing-4;
+  z-index: 1000;
+  padding: $spacing-2 $spacing-4;
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: $radius-md;
+  transition: top $transition-fast;
+
+  &:focus {
+    top: $spacing-4;
+  }
+}
+
+// Body Scroll Lock when Modal is Active
+body.modal-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+// Smooth theme switching on all color properties
+body {
+  transition: background-color $transition-base, color $transition-base;
+}
+
+// Entrance Animation Keyframes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Navbar entrance
+.header {
+  animation: slideInDown 0.5s $ease-out-smooth both;
+}
+
+// Hero content staggered entrance
+.hero-spotlight-badge { animation: fadeInUp 0.5s 0.1s $ease-out-smooth both; }
+.hero-title           { animation: fadeInUp 0.55s 0.2s $ease-out-smooth both; }
+.hero-meta            { animation: fadeInUp 0.55s 0.3s $ease-out-smooth both; }
+.hero-description     { animation: fadeInUp 0.55s 0.38s $ease-out-smooth both; }
+.hero-actions         { animation: fadeInUp 0.55s 0.46s $ease-out-smooth both; }
+
+// Movie cards staggered entrance via CSS nth-child
+.movie-card {
+  animation: fadeInUp 0.4s $ease-out-smooth both;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.04s};
+    }
+  }
+}
+
+// Reduced Motion Media Query
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

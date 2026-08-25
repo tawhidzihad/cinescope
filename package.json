@@ -1,0 +1,14 @@
+{
+  "name": "cinescope-movie-discovery",
+  "version": "1.0.0",
+  "description": "A modern, responsive English Movie Discovery web application built with HTML5, SCSS, and Vanilla JavaScript.",
+  "scripts": {
+    "start": "node server.js",
+    "build:css": "sass scss/main.scss css/main.css --no-source-map --style=compressed",
+    "watch:css": "sass scss/main.scss css/main.css --watch"
+  },
+  "devDependencies": {
+    "sass": "^1.85.0"
+  },
+  "type": "module"
+}

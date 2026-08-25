@@ -1,0 +1,189 @@
+// ==========================================================================
+// Movie Card Component
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.movie-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-lg;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform $transition-base, box-shadow $transition-base, border-color $transition-base, background-color $transition-base;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-color-hover);
+    background-color: var(--bg-card-hover);
+
+    .card-poster img {
+      transform: scale(1.05);
+    }
+
+    .card-title {
+      color: var(--accent-primary);
+    }
+  }
+
+  &:focus-visible {
+    transform: translateY(-4px);
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 4px;
+  }
+}
+
+// Poster Area
+.card-poster {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background-color: var(--bg-surface-elevated);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform $transition-slow;
+    background-color: var(--bg-surface-elevated);
+  }
+
+  .poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-card-overlay);
+    opacity: 0.8;
+    pointer-events: none;
+    transition: opacity $transition-base;
+  }
+
+  // Badges over poster
+  .card-badge-rating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(11, 15, 23, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 4px 8px;
+    border-radius: $radius-full;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #f8fafc;
+    box-shadow: var(--shadow-sm);
+
+    .star-icon {
+      color: var(--accent-gold);
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  .card-badge-year {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(11, 15, 23, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: $radius-sm;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+}
+
+// Card Content Area
+.card-body {
+  padding: $spacing-4;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: $spacing-2;
+}
+
+// Genre Tags
+.card-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-1;
+
+  .genre-pill {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: var(--badge-bg);
+    color: var(--badge-text);
+  }
+}
+
+// Card Title
+.card-title {
+  font-family: $font-display;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+  transition: color $transition-fast;
+  @include text-truncate;
+}
+
+// Card Short Description
+.card-description {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  @include line-clamp(2);
+  margin-top: auto;
+}
+
+// Card Footer / Quick Action Hint
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: $spacing-2;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: $spacing-2;
+
+  .card-runtime {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .card-action-link {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      transition: transform $transition-fast;
+    }
+  }
+}
+
+.movie-card:hover .card-action-link svg {
+  transform: translateX(3px);
+}

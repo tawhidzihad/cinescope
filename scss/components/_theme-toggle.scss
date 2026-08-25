@@ -1,0 +1,54 @@
+// ==========================================================================
+// Theme Toggle Button
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.theme-toggle {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: $radius-full;
+  @include flex-center;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: all $transition-base;
+
+  &:hover {
+    background-color: var(--bg-card-hover);
+    border-color: var(--border-color-hover);
+    color: var(--accent-gold);
+  }
+
+  .icon-sun,
+  .icon-moon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    transition: transform $transition-base, opacity $transition-base;
+  }
+
+  .icon-sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+  }
+
+  .icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+// Light theme active state for theme toggle icon
+[data-theme="light"] .theme-toggle {
+  .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+  
+  .icon-moon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+  }
+}

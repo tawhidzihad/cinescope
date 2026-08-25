@@ -1,0 +1,39 @@
+// ==========================================================================
+// Empty State Component
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.empty-state {
+  grid-column: 1 / -1;
+  @include flex-center;
+  flex-direction: column;
+  text-align: center;
+  padding: $spacing-16 $spacing-4;
+  background-color: var(--bg-surface-elevated);
+  border: 1px dashed var(--border-color);
+  border-radius: $radius-xl;
+  margin: $spacing-4 0;
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: $spacing-4;
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+
+  .empty-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: $spacing-2;
+  }
+
+  .empty-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    max-width: 420px;
+    margin-bottom: $spacing-6;
+  }
+}

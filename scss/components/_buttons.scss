@@ -1,0 +1,121 @@
+// ==========================================================================
+// Button Component Styles
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  font-family: $font-primary;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    transition: transform $transition-fast;
+  }
+
+  &:hover svg {
+    transform: translateX(2px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Button Variants
+.btn-primary {
+  background: var(--gradient-accent);
+  color: #ffffff;
+  box-shadow: 0 4px 14px var(--accent-primary-glow);
+
+  &:hover {
+    box-shadow: 0 6px 20px var(--accent-primary-glow);
+    filter: brightness(1.1);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+
+  &:hover {
+    background-color: var(--bg-card-hover);
+    border-color: var(--border-color-hover);
+    color: var(--text-primary);
+  }
+}
+
+.btn-glass {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  // In light mode on the hero, keep it readable with a darker glass
+  [data-theme="light"] & {
+    background: rgba(15, 23, 42, 0.08);
+    color: var(--text-primary);
+    border-color: rgba(15, 23, 42, 0.2);
+
+    &:hover {
+      background: rgba(15, 23, 42, 0.14);
+      border-color: rgba(15, 23, 42, 0.3);
+    }
+  }
+}
+
+.btn-icon {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: $radius-full;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  transition: all $transition-fast;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: var(--bg-card-hover);
+    border-color: var(--border-color-hover);
+    color: var(--accent-primary);
+  }
+
+  &:hover svg {
+    transform: none;
+  }
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: $radius-sm;
+}

@@ -1,0 +1,296 @@
+// ==========================================================================
+// Navbar Component Styles
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: $z-index-nav;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
+  transition: background-color $transition-base, border-color $transition-base;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  height: 72px;
+
+  @include respond-to('md') {
+    height: 80px;
+  }
+}
+
+// Brand Logo
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-family: $font-display;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  text-decoration: none;
+  flex-shrink: 0;
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-highlight {
+    color: var(--accent-primary);
+  }
+}
+
+// Desktop Nav Links
+.nav-links {
+  display: none;
+  align-items: center;
+  gap: $spacing-6;
+
+  @include respond-to('lg') {
+    display: flex;
+  }
+
+  .nav-link {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color $transition-fast;
+    position: relative;
+    padding: $spacing-1 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+      transition: width $transition-base;
+      border-radius: $radius-full;
+    }
+
+    &:hover,
+    &.active {
+      color: var(--text-primary);
+
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Nav Controls (Search, Theme, Menu)
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+// Search Input Bar in Header
+.nav-search {
+  position: relative;
+  display: none;
+
+  @include respond-to('sm') {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-input {
+    width: 220px;
+    height: 42px;
+    padding: 0 2.25rem 0 2.5rem;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: $radius-full;
+    transition: all $transition-base;
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
+
+    &:focus {
+      width: 280px;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-primary-glow);
+      background-color: var(--bg-surface);
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .search-clear-btn {
+    position: absolute;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    @include flex-center;
+    color: var(--text-muted);
+    border-radius: $radius-full;
+    display: none;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &.visible {
+      display: flex;
+    }
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+// Mobile Hamburger Toggle
+.mobile-menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  border-radius: $radius-md;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  padding: 0;
+
+  @include respond-to('lg') {
+    display: none;
+  }
+
+  span {
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+    transition: all $transition-base;
+  }
+
+  &.active {
+    span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+  }
+}
+
+// Mobile Menu Drawer
+.mobile-drawer {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  width: 100%;
+  height: calc(100svh - 72px);
+  background-color: var(--bg-surface);
+
+  @include respond-to('md') {
+    top: 80px;
+    height: calc(100svh - 80px);
+  }
+  z-index: $z-index-sticky;
+  padding: $spacing-6 $spacing-4;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all $transition-base;
+  overflow-y: auto;
+  border-top: 1px solid var(--border-color);
+
+  @include respond-to('lg') {
+    display: none;
+  }
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mobile-search {
+    position: relative;
+    width: 100%;
+
+    .search-input {
+      width: 100%;
+      height: 46px;
+      padding: 0 2.5rem 0 2.75rem;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      background-color: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: $radius-md;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+    }
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-3;
+
+    .mobile-nav-link {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: $spacing-3 $spacing-4;
+      border-radius: $radius-md;
+      transition: background-color $transition-fast;
+
+      &:hover,
+      &.active {
+        background-color: var(--bg-surface-elevated);
+        color: var(--accent-primary);
+      }
+    }
+  }
+}
