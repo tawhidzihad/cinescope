@@ -2,6 +2,8 @@
 // Movie Details Modal Component & Controller
 // ==========================================================================
 
+import { trailerPlayer } from './trailer-player.js';
+
 const FALLBACK_POSTER = './assets/images/poster-fallback.svg';
 
 class MovieModalController {
@@ -63,10 +65,10 @@ class MovieModalController {
       this.toggleWatchlist(this.currentMovie.id);
     });
 
-    // Trailer Preview Feedback
+    // Real Trailer Player
     this.trailerBtn?.addEventListener('click', () => {
       if (!this.currentMovie) return;
-      alert(`Trailer preview for "${this.currentMovie.title}" is ready! In a full streaming app, this would play the official trailer.`);
+      trailerPlayer.play(this.currentMovie, this.trailerBtn);
     });
   }
 

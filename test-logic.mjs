@@ -35,7 +35,7 @@ function filterMovies(query, genre, sort) {
 console.log('\n========== CineScope Feature Logic Tests ==========\n');
 
 // 1. Catalog size
-check('Total movie catalog', movies.length === 16, `${movies.length} movies loaded`);
+check('Total movie catalog >= 216', movies.length >= 216, `${movies.length} movies loaded`);
 
 // 2. All movies have required fields
 const hasAllFields = movies.every(m => m.id && m.title && m.year && m.rating && m.genres?.length && m.poster && m.director && m.cast?.length);
@@ -43,15 +43,15 @@ check('All movies have required schema fields', hasAllFields);
 
 // 3. Search "inception"
 const r1 = filterMovies('inception', 'All', 'rating-desc');
-check('Search "inception" returns 1 result', r1.length === 1, `Found: "${r1.map(m=>m.title).join(', ')}"`);
+check('Search "inception" returns matching result', r1.length >= 1, `Found: "${r1.map(m=>m.title).join(', ')}"`);
 
 // 4. Search "dark knight"
 const r2 = filterMovies('dark knight', 'All', 'rating-desc');
-check('Search "dark knight" matches The Dark Knight', r2.length === 1, `Found: "${r2.map(m=>m.title).join(', ')}"`);
+check('Search "dark knight" matches The Dark Knight', r2.length >= 1, `Found: "${r2.map(m=>m.title).join(', ')}"`);
 
 // 5. Case-insensitive search
 const r3 = filterMovies('INCEPTION', 'All', 'rating-desc');
-check('Search is case-insensitive (INCEPTION)', r3.length === 1, `Found: "${r3.map(m=>m.title).join(', ')}"`);
+check('Search is case-insensitive (INCEPTION)', r3.length >= 1, `Found: "${r3.map(m=>m.title).join(', ')}"`);
 
 // 6. Search by director
 const r4 = filterMovies('villeneuve', 'All', 'rating-desc');
@@ -65,9 +65,9 @@ check('Search by cast "zendaya"', r5.length >= 1, `Found: "${r5.map(m=>m.title).
 const r6 = filterMovies('nomatchquery123', 'All', 'rating-desc');
 check('Search "nomatchquery123" returns 0 results (triggers empty state)', r6.length === 0, `Count: ${r6.length}`);
 
-// 9. Reset: empty query, 'All' genre, rating-desc = all 16 movies
+// 9. Reset: empty query, 'All' genre, rating-desc = all movies
 const r7 = filterMovies('', 'All', 'rating-desc');
-check('Reset (empty query + All + rating-desc) restores all 16 movies', r7.length === 16, `Count: ${r7.length}, top: ${r7[0].title} @ ${r7[0].rating}`);
+check('Reset (empty query + All + rating-desc) restores all movies', r7.length === movies.length, `Count: ${r7.length}, top: ${r7[0].title} @ ${r7[0].rating}`);
 
 // 10. Genre filter: Sci-Fi
 const r8 = filterMovies('', 'Sci-Fi', 'rating-desc');

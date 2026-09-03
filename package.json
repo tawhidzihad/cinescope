@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node server.js",
     "build:css": "sass scss/main.scss css/main.css --no-source-map --style=compressed",
-    "watch:css": "sass scss/main.scss css/main.css --watch"
+    "watch:css": "sass scss/main.scss css/main.css --watch",
+    "data:generate": "node scripts/generate-movie-catalog.mjs",
+    "data:validate": "node scripts/validate-movie-catalog.mjs"
   },
   "devDependencies": {
     "sass": "^1.85.0"

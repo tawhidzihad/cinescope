@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="CineScope - Detailed movie information, official trailers, ratings, and synopsis." />
+  <meta name="theme-color" content="#0b0f17" />
+  <title id="pageTitle">Movie Details — CineScope</title>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap"
+    rel="stylesheet" />
+
+  <!-- Compiled Stylesheet -->
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+
+<body class="movie-detail-page">
+  <!-- Accessibility Skip Link -->
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="header detail-header">
+    <div class="container navbar">
+      <!-- Back to Catalog Link -->
+      <a href="./index.html" class="detail-back-link" aria-label="Back to movie catalog">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+        <span>Discover</span>
+      </a>
+
+      <!-- Brand Logo -->
+      <a href="./index.html" class="brand" aria-label="CineScope Home">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+            <line x1="7" y1="2" x2="7" y2="22" />
+            <line x1="17" y1="2" x2="17" y2="22" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <line x1="2" y1="7" x2="7" y2="7" />
+            <line x1="2" y1="17" x2="7" y2="17" />
+            <line x1="17" y1="17" x2="22" y2="17" />
+            <line x1="17" y1="7" x2="22" y2="7" />
+          </svg>
+        </span>
+        <span>CINE<span class="brand-highlight">SCOPE</span></span>
+      </a>
+
+      <!-- Theme Toggle -->
+      <button type="button" class="theme-toggle" aria-label="Switch theme mode" title="Toggle dark or light theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="mainContent">
+    <!-- Movie Details Content View (Populated by JS) -->
+    <div id="movieDetailContainer" class="detail-container">
+      <!-- Backdrop Banner -->
+      <section class="detail-hero" aria-label="Movie Visual Banner">
+        <div class="detail-backdrop-wrap">
+          <img id="detailBackdropImg" src="" alt="" class="detail-backdrop-img" />
+          <div class="detail-hero-overlay"></div>
+        </div>
+      </section>
+
+      <!-- Movie Meta & Content Body -->
+      <section class="detail-body-section">
+        <div class="container detail-layout">
+          <!-- Left Column: Poster -->
+          <div class="detail-poster-col">
+            <div class="detail-poster-card">
+              <img id="detailPosterImg" src="" alt="Movie Poster" class="detail-poster-img"
+                onerror="this.onerror=null; this.src='./assets/images/poster-fallback.svg';" />
+            </div>
+          </div>
+
+          <!-- Right Column: Info & Actions -->
+          <div class="detail-info-col">
+            <h1 class="detail-title" id="detailTitle"></h1>
+            <p class="detail-tagline" id="detailTagline"></p>
+
+            <div class="detail-meta-row" id="detailMetaRow">
+              <div class="detail-rating-badge" id="detailRatingBadge">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+                <span id="detailRating"></span>
+              </div>
+              <span class="detail-meta-item" id="detailVotes"></span>
+              <span class="detail-meta-divider">•</span>
+              <span class="detail-meta-item" id="detailYear"></span>
+              <span class="detail-meta-divider">•</span>
+              <span class="detail-meta-item" id="detailDuration"></span>
+            </div>
+
+            <!-- Genre Badges -->
+            <div class="detail-genres" id="detailGenres"></div>
+
+            <!-- Action CTAs -->
+            <div class="detail-actions">
+              <button type="button" class="btn btn-primary" id="detailTrailerBtn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+                Watch Trailer
+              </button>
+              <button type="button" class="btn btn-secondary" id="detailWatchlistBtn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+                Add to Watchlist
+              </button>
+            </div>
+
+            <!-- Synopsis -->
+            <div class="detail-synopsis-box">
+              <h2 class="detail-section-title">Overview</h2>
+              <p class="detail-overview" id="detailOverview"></p>
+            </div>
+
+            <!-- Cast & Crew -->
+            <div class="detail-credits-grid">
+              <div class="credit-card">
+                <span class="credit-label">Director</span>
+                <span class="credit-value" id="detailDirector"></span>
+              </div>
+              <div class="credit-card">
+                <span class="credit-label">Starring Cast</span>
+                <span class="credit-value" id="detailCast"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Error / Not Found View (Hidden by default) -->
+    <div id="notFoundContainer" class="not-found-container" style="display: none;">
+      <div class="container not-found-card">
+        <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <h2>Movie Not Found</h2>
+        <p>The movie you are looking for could not be found or has an invalid ID.</p>
+        <a href="./index.html" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Back to Movies
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 CineScope. Discover English Cinema.</p>
+        <a href="#mainContent" class="back-to-top" aria-label="Scroll back to top of page">
+          Back to top
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="m18 15-6-6-6 6" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Page Script Entrypoint -->
+  <script type="module" src="./js/movie-page.js"></script>
+</body>
+
+</html>

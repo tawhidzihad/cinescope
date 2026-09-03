@@ -20,8 +20,12 @@
 @use 'components/modal';
 @use 'components/filters';
 @use 'components/empty-state';
+@use 'components/toast';
+@use 'components/trailer-player';
 
 // 4. Sections
 @use 'sections/hero';
 @use 'sections/movies';
 @use 'sections/footer';
+@use 'sections/movie-detail';
+

@@ -258,16 +258,32 @@
   .mobile-search {
     position: relative;
     width: 100%;
+    display: block;
 
     .search-input {
+      display: block;
       width: 100%;
       height: 46px;
-      padding: 0 2.5rem 0 2.75rem;
+      line-height: 46px;
+      padding: 0 2.75rem 0 2.875rem;
       font-size: 0.95rem;
       color: var(--text-primary);
       background-color: var(--bg-surface-elevated);
       border: 1px solid var(--border-color);
       border-radius: $radius-md;
+      box-sizing: border-box;
+      vertical-align: middle;
+
+      &:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px var(--accent-primary-glow);
+        outline: none;
+      }
+
+      &::placeholder {
+        color: var(--text-muted);
+        line-height: normal;
+      }
     }
 
     .search-icon {
@@ -279,6 +295,36 @@
       height: 20px;
       color: var(--text-muted);
       pointer-events: none;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      @include flex-center;
+      color: var(--text-muted);
+      border-radius: $radius-full;
+      display: none;
+      transition: color $transition-fast;
+      padding: 0;
+
+      &:hover {
+        color: var(--text-primary);
+      }
+
+      &.visible {
+        display: flex;
+      }
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
     }
   }
 

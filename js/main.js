@@ -95,10 +95,10 @@ class App {
     const heroDesc = document.getElementById('heroDescription');
     if (heroDesc) heroDesc.textContent = featuredMovie.description;
 
-    // Attach Hero CTA modal trigger
+    // Attach Hero CTA trigger
     this.heroDetailsBtn = document.getElementById('heroDetailsBtn');
     this.heroDetailsBtn?.addEventListener('click', () => {
-      movieModal.open(featuredMovie, this.heroDetailsBtn);
+      this.handleMovieSelection(featuredMovie, this.heroDetailsBtn);
     });
 
     document.getElementById('heroExploreBtn')?.addEventListener('click', () => {
@@ -106,6 +106,20 @@ class App {
     });
   }
 
+  handleMovieSelection(movie, triggerElement = null) {
+    if (!movie) return;
+
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    if (isMobile) {
+      window.open(
+        `./movie.html?id=${encodeURIComponent(movie.id)}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+    } else {
+      movieModal.open(movie, triggerElement);
+    }
+  }
 
   renderGenrePills() {
     if (!this.genrePillsContainer) return;
@@ -161,11 +175,11 @@ class App {
       const movieId = card.dataset.movieId;
       const movie = this.movies.find(m => m.id === movieId);
       if (movie) {
-        movieModal.open(movie, card);
+        this.handleMovieSelection(movie, card);
       }
     });
 
-    // Keyboard navigation: Enter or Space opens modal
+    // Keyboard navigation: Enter or Space opens modal / mobile page
     this.moviesGrid.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
         const card = event.target.closest('.movie-card');
@@ -175,7 +189,7 @@ class App {
         const movieId = card.dataset.movieId;
         const movie = this.movies.find(m => m.id === movieId);
         if (movie) {
-          movieModal.open(movie, card);
+          this.handleMovieSelection(movie, card);
         }
       }
     });

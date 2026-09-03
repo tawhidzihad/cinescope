@@ -1,0 +1,106 @@
+// ==========================================================================
+// Toast Notification Styles
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.toast-container {
+  position: fixed;
+  bottom: $spacing-6;
+  right: $spacing-6;
+  z-index: $z-index-toast;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  max-width: 380px;
+  width: calc(100vw - 2rem);
+  pointer-events: none;
+
+  @include respond-below('sm') {
+    right: $spacing-4;
+    left: $spacing-4;
+    bottom: $spacing-4;
+    width: auto;
+  }
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-lg;
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  transform: translateY(20px) scale(0.95);
+  opacity: 0;
+  transition: transform $transition-base, opacity $transition-base;
+
+  &.visible {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  &.dismissing {
+    transform: translateY(10px) scale(0.95);
+    opacity: 0;
+  }
+
+  .toast-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent-primary);
+  }
+
+  &.toast-warning,
+  &.toast-info {
+    .toast-icon {
+      color: var(--accent-gold);
+    }
+  }
+
+  &.toast-success {
+    .toast-icon {
+      color: #10b981;
+    }
+  }
+
+  .toast-content {
+    flex-grow: 1;
+    min-width: 0;
+
+    .toast-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .toast-message {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+
+  .toast-close {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    @include flex-center;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    border-radius: $radius-sm;
+    padding: 0;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+}
