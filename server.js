@@ -29,8 +29,19 @@ const server = http.createServer((req, res) => {
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
+      const notFoundPath = path.join(__dirname, '404.html');
+      fs.readFile(notFoundPath, (err404, notFoundContent) => {
+        if (err404) {
+          res.writeHead(404, { 'Content-Type': 'text/plain; charset=UTF-8' });
+          res.end('404 Not Found');
+        } else {
+          res.writeHead(404, {
+            'Content-Type': 'text/html; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*'
+          });
+          res.end(notFoundContent);
+        }
+      });
       return;
     }
 

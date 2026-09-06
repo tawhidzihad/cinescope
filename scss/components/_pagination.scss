@@ -1,0 +1,140 @@
+// ==========================================================================
+// Pagination Controls
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  flex-wrap: wrap;
+  margin-top: $spacing-8;
+  padding: $spacing-2 0 $spacing-4;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-1;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.pagination-nav,
+.pagination-page {
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0 $spacing-2;
+  border-radius: $radius-md;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-1;
+  transition: background-color $transition-fast, border-color $transition-fast, color $transition-fast;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--text-primary);
+    border-color: var(--border-color-hover);
+    background-color: var(--bg-card-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pagination-page.is-current {
+  background: var(--accent-primary);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.pagination-ellipsis {
+  min-width: 28px;
+  padding: 0 $spacing-1;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  user-select: none;
+  pointer-events: none;
+}
+
+@include respond-below('sm') {
+  .pagination {
+    gap: $spacing-1;
+    margin-top: $spacing-6;
+  }
+
+  .pagination-pages {
+    gap: 2px;
+  }
+
+  .pagination-nav-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .pagination-nav {
+    min-width: 34px;
+    padding: 0;
+  }
+
+  .pagination-page,
+  .pagination-nav {
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0 4px;
+    font-size: 0.8125rem;
+  }
+
+  .pagination-ellipsis {
+    min-width: 18px;
+    padding: 0 2px;
+    font-size: 0.8125rem;
+  }
+}
+
+@include respond-below('xs') {
+  .pagination {
+    gap: 2px;
+  }
+
+  .pagination-page,
+  .pagination-nav {
+    min-width: 30px;
+    min-height: 32px;
+    padding: 0 2px;
+    font-size: 0.75rem;
+  }
+
+  .pagination-ellipsis {
+    min-width: 14px;
+    padding: 0 1px;
+  }
+}
+

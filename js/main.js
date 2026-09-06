@@ -6,6 +6,8 @@ import { movies, availableGenres } from './data/movies.js';
 import { createMovieCard } from './components/movie-card.js';
 import { createEmptyState } from './components/empty-state.js';
 import { movieModal } from './components/movie-modal.js';
+import { PaginationController, paginate, getTotalPages, MOVIES_PER_PAGE } from './components/pagination.js';
+import { showLoadingState, hideLoadingState } from './components/loading-state.js';
 import { initTheme } from './features/theme.js';
 import { SearchController } from './features/search.js';
 import { FilterController } from './features/filters.js';
@@ -14,8 +16,14 @@ import { initMobileNav } from './features/mobile-nav.js';
 class App {
   constructor() {
     this.movies = movies;
+    this.filteredMovies = [...movies];
+    this.currentPage = 1;
+    this.moviesPerPage = MOVIES_PER_PAGE;
+
     this.moviesGrid = document.getElementById('moviesGrid');
     this.genrePillsContainer = document.getElementById('genrePills');
+    this.resultsCountEl = document.getElementById('resultsCount');
+    this.paginationNav = document.getElementById('paginationNav');
     this.heroSection = document.getElementById('heroSection');
     this.heroDetailsBtn = document.getElementById('heroDetailsBtn');
     this.heroExploreBtn = document.getElementById('heroExploreBtn');
@@ -34,24 +42,41 @@ class App {
     // 3. Render Genre Filter Pills
     this.renderGenrePills();
 
-    // 4. Initialize Filter & Sort Controller
-    this.filterController = new FilterController({
-      allMovies: this.movies,
-      onFilterChange: (filteredMovies) => this.renderMovies(filteredMovies)
+    // 4. Initialize Pagination Controller
+    this.paginationController = new PaginationController({
+      container: this.paginationNav,
+      onPageChange: (nextPage) => this.handlePageChange(nextPage)
     });
 
-    // 5. Initialize Search Controller
+    // 5. Initialize Filter & Sort Controller
+    this.filterController = new FilterController({
+      allMovies: this.movies,
+      onFilterChange: (filteredMovies) => this.handleFilterChange(filteredMovies)
+    });
+
+    // 6. Initialize Search Controller
     this.searchController = new SearchController((query) => {
       this.filterController.setSearchQuery(query);
     });
 
-    // 6. Setup Event Delegation for Movie Cards
+    // 7. Setup Event Delegation for Movie Cards
     this.setupGridInteractions();
 
-    // 7. Setup Quick Nav Filter Actions
+    // 8. Setup Quick Nav Filter Actions
     this.setupNavLinks();
 
-    // 8. Initial Movie Grid Render
+    // 9. Re-render pagination on resize for responsive ellipsis ranges
+    window.addEventListener('resize', () => {
+      const totalPages = getTotalPages(this.filteredMovies.length, this.moviesPerPage);
+      if (totalPages > 1) {
+        this.paginationController.render({
+          currentPage: this.currentPage,
+          totalPages
+        });
+      }
+    });
+
+    // 10. Initial Movie Grid Render
     this.filterController.applyFilterAndSort();
   }
 
@@ -141,19 +166,90 @@ class App {
       .join('');
   }
 
-  renderMovies(movieList) {
-    if (!this.moviesGrid) return;
+  handleFilterChange(filteredMovies) {
+    this.filteredMovies = filteredMovies;
+    this.currentPage = 1;
+    this.applyPagination(false);
+  }
 
-    this.moviesGrid.innerHTML = '';
+  handlePageChange(nextPage) {
+    this.currentPage = nextPage;
+    this.applyPagination(true);
+  }
 
-    if (movieList.length === 0) {
-      const emptyState = createEmptyState(() => {
-        this.searchController.clearSearch();
-        this.filterController.reset();
-      });
-      this.moviesGrid.appendChild(emptyState);
+  applyPagination(shouldScroll = false) {
+    const totalItems = this.filteredMovies.length;
+    const totalPages = getTotalPages(totalItems, this.moviesPerPage);
+
+    // If no results, show empty state & hide pagination
+    if (totalItems === 0) {
+      this.renderEmptyState();
+      this.paginationController.render({ currentPage: 1, totalPages: 0 });
+      this.updateResultsCount(0, 0, 0);
       return;
     }
+
+    // Clamp current page to valid range
+    if (this.currentPage > totalPages) {
+      this.currentPage = Math.max(1, totalPages);
+    }
+
+    const { pageItems, currentPage, startIndex, endIndex } = paginate(
+      this.filteredMovies,
+      this.currentPage,
+      this.moviesPerPage
+    );
+    this.currentPage = currentPage;
+
+    // Render only the 6 cards for the current page
+    this.renderMovies(pageItems);
+
+    // Render pagination controls (ellipsis strategy, disable prev/next where appropriate)
+    this.paginationController.render({
+      currentPage: this.currentPage,
+      totalPages
+    });
+
+    // Update dynamic results count
+    this.updateResultsCount(totalItems, startIndex, endIndex);
+
+    // Smooth scroll to movie discovery section on page change
+    if (shouldScroll) {
+      const discoverSection = document.getElementById('discoverSection');
+      if (discoverSection) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        discoverSection.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  }
+
+  renderEmptyState() {
+    if (!this.moviesGrid) return;
+    hideLoadingState(this.moviesGrid);
+    this.moviesGrid.innerHTML = '';
+    const emptyState = createEmptyState(() => {
+      this.searchController.clearSearch();
+      this.filterController.reset();
+    });
+    this.moviesGrid.appendChild(emptyState);
+  }
+
+  updateResultsCount(totalItems, startIndex, endIndex) {
+    if (!this.resultsCountEl) return;
+    if (totalItems === 0) {
+      this.resultsCountEl.innerHTML = `Showing <span class="count-highlight">0</span> of 0 movies`;
+    } else {
+      this.resultsCountEl.innerHTML = `Showing <span class="count-highlight">${startIndex}–${endIndex}</span> of ${totalItems} movies`;
+    }
+  }
+
+  renderMovies(movieList) {
+    if (!this.moviesGrid) return;
+    hideLoadingState(this.moviesGrid);
+    this.moviesGrid.innerHTML = '';
 
     const fragment = document.createDocumentFragment();
     movieList.forEach(movie => {
@@ -163,6 +259,7 @@ class App {
 
     this.moviesGrid.appendChild(fragment);
   }
+
 
   setupGridInteractions() {
     if (!this.moviesGrid) return;

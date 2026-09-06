@@ -187,3 +187,52 @@
 .movie-card:hover .card-action-link svg {
   transform: translateX(3px);
 }
+
+@include respond-below('sm') {
+  .movie-card {
+    .card-poster {
+      .card-badge-rating {
+        top: 8px;
+        right: 8px;
+        padding: 2px 6px;
+        font-size: 0.75rem;
+
+        .star-icon {
+          width: 11px;
+          height: 11px;
+        }
+      }
+
+      .card-badge-year {
+        top: 8px;
+        left: 8px;
+        padding: 2px 6px;
+        font-size: 0.6875rem;
+      }
+    }
+
+    .card-body {
+      padding: $spacing-2 $spacing-3;
+      gap: $spacing-1;
+    }
+
+    .card-title {
+      font-size: 0.9375rem;
+    }
+
+    .card-description {
+      font-size: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .card-footer {
+      padding-top: $spacing-1;
+      margin-top: $spacing-1;
+
+      .card-runtime,
+      .card-action-link {
+        font-size: 0.6875rem;
+      }
+    }
+  }
+}

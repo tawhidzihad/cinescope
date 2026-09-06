@@ -97,10 +97,7 @@ export class FilterController {
       }
     });
 
-    // Update results counter in UI
-    this.updateResultsCount(filtered.length, this.allMovies.length);
-
-    // Trigger update
+    // Trigger update (App handles pagination & result counting)
     this.onFilterChange(filtered);
   }
 

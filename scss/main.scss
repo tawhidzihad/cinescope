@@ -19,6 +19,8 @@
 @use 'components/movie-card';
 @use 'components/modal';
 @use 'components/filters';
+@use 'components/pagination';
+@use 'components/loading-state';
 @use 'components/empty-state';
 @use 'components/toast';
 @use 'components/trailer-player';
@@ -28,4 +30,5 @@
 @use 'sections/movies';
 @use 'sections/footer';
 @use 'sections/movie-detail';
+@use 'sections/not-found';
 

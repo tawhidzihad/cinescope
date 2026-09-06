@@ -1,0 +1,90 @@
+// ==========================================================================
+// Loading / Skeleton State
+// ==========================================================================
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.movies-grid.is-loading {
+  .loading-state {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+}
+
+.movie-skeleton {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+.skeleton-poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background-color: var(--bg-surface-elevated);
+}
+
+.skeleton-body {
+  padding: $spacing-3;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: $radius-full;
+  background-color: var(--bg-surface-elevated);
+
+  &.skeleton-line-sm { width: 42%; }
+  &.skeleton-line-md { width: 68%; }
+  &.skeleton-line-lg { width: 88%; }
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  }
+}
+
+[data-theme="light"] .skeleton-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(15, 23, 42, 0.06) 50%,
+    transparent 100%
+  );
+}
+
+@keyframes skeleton-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer::after {
+    animation: none;
+  }
+}
+
+.page-loading {
+  min-height: 40vh;
+  @include flex-center;
+}

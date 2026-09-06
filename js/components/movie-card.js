@@ -27,7 +27,7 @@ export function createMovieCard(movie) {
     <div class="card-poster">
       <img 
         src="${movie.poster}" 
-        alt="${movie.title} poster" 
+        alt="Poster for ${movie.title}" 
         loading="lazy"
         onerror="this.onerror=null; this.src='${FALLBACK_POSTER}';"
       />
