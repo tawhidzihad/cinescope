@@ -147,3 +147,131 @@
   gap: $spacing-3;
   padding-top: $spacing-2;
 }
+
+// Hero Carousel Navigation
+.hero-carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: $radius-full;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  [data-theme="light"] & {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+  }
+}
+
+.hero-carousel-prev {
+  left: $spacing-4;
+
+  @include respond-below('sm') {
+    left: $spacing-2;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.hero-carousel-next {
+  right: $spacing-4;
+
+  @include respond-below('sm') {
+    right: $spacing-2;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+// Hero Carousel Dots
+.hero-carousel-dots {
+  position: absolute;
+  bottom: $spacing-6;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: $radius-full;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all $transition-fast;
+  padding: 0;
+
+  &:hover {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  &.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    width: 28px;
+  }
+
+  [data-theme="light"] & {
+    border-color: rgba(15, 23, 42, 0.3);
+
+    &:hover {
+      border-color: var(--text-primary);
+      background: rgba(15, 23, 42, 0.15);
+    }
+
+    &.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+  }
+}
+
+// Hero Loading State
+.hero-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  z-index: 1;
+}
+
+.hero-skeleton-backdrop {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--bg-surface-elevated) 25%, var(--bg-card-hover) 50%, var(--bg-surface-elevated) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

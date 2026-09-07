@@ -1,1 +1,2 @@
-/* /404.html 404
+# Redirects are handled in netlify.toml
+# This file is kept for compatibility

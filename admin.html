@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CineScope Admin Dashboard - Manage movies, imports, and catalog." />
+  <meta name="theme-color" content="#0b0f17" />
+  <title>Admin Dashboard — CineScope</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body class="admin-page">
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- Admin Header -->
+  <header class="header admin-header">
+    <div class="container navbar">
+      <a href="./index.html" class="brand" aria-label="CineScope Home">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+            <line x1="7" y1="2" x2="7" y2="22" />
+            <line x1="17" y1="2" x2="17" y2="22" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <line x1="2" y1="7" x2="7" y2="7" />
+            <line x1="2" y1="17" x2="7" y2="17" />
+            <line x1="17" y1="17" x2="22" y2="17" />
+            <line x1="17" y1="7" x2="22" y2="7" />
+          </svg>
+        </span>
+        <span>CINE<span class="brand-highlight">SCOPE</span></span>
+      </a>
+      <div class="admin-header-right">
+        <span class="admin-user-email" id="adminEmail"></span>
+        <button type="button" class="theme-toggle" aria-label="Switch theme mode" title="Toggle dark or light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Login View -->
+  <div id="loginView" class="admin-login-view">
+    <div class="container">
+      <div class="admin-login-card">
+        <h1 class="admin-login-title">CineScope Admin</h1>
+        <p class="admin-login-subtitle">Sign in to manage your movie catalog</p>
+        <form id="loginForm" class="admin-login-form" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" class="form-input" placeholder="admin@example.com" required autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" class="form-input" placeholder="Enter password" required autocomplete="current-password" />
+          </div>
+          <div id="loginError" class="form-error" style="display:none"></div>
+          <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-spinner" style="display:none"></span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard View -->
+  <div id="dashboardView" class="admin-dashboard-view" style="display:none">
+    <main id="mainContent" class="admin-main">
+      <div class="container">
+        <!-- Dashboard Stats -->
+        <div class="admin-stats" id="adminStats">
+          <div class="stat-card">
+            <span class="stat-number" id="statTotal">0</span>
+            <span class="stat-label">Total Movies</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="statNewReleases">0</span>
+            <span class="stat-label">New Releases</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="statGenres">0</span>
+            <span class="stat-label">Genres</span>
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="admin-action-bar">
+          <h2 class="admin-section-title">Movie Catalog</h2>
+          <div class="admin-action-buttons">
+            <button type="button" class="btn btn-secondary" id="exportBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Export JSON
+            </button>
+            <button type="button" class="btn btn-secondary" id="bulkImportBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Bulk Import
+            </button>
+            <button type="button" class="btn btn-primary" id="addMovieBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Movie
+            </button>
+          </div>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="admin-toolbar">
+          <div class="admin-search">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="search" id="adminSearchInput" class="form-input" placeholder="Search movies..." autocomplete="off" />
+          </div>
+          <div class="admin-filters">
+            <select id="adminGenreFilter" class="form-select">
+              <option value="All">All Genres</option>
+            </select>
+            <select id="adminSortSelect" class="form-select">
+              <option value="createdAt-desc">Newest Added</option>
+              <option value="rating-desc">Highest Rated</option>
+              <option value="year-desc">Newest Release</option>
+              <option value="title-asc">Title (A-Z)</option>
+              <option value="title-desc">Title (Z-A)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Movie Table -->
+        <div class="admin-table-wrapper" id="adminTableWrapper">
+          <div class="admin-loading" id="adminLoading">
+            <div class="admin-skeleton-table">
+              <div class="skeleton-row skeleton-shimmer"></div>
+              <div class="skeleton-row skeleton-shimmer"></div>
+              <div class="skeleton-row skeleton-shimmer"></div>
+              <div class="skeleton-row skeleton-shimmer"></div>
+              <div class="skeleton-row skeleton-shimmer"></div>
+            </div>
+          </div>
+          <table class="admin-table" id="adminTable" style="display:none">
+            <thead>
+              <tr>
+                <th class="th-poster">Poster</th>
+                <th class="th-title">Title</th>
+                <th class="th-year">Year</th>
+                <th class="th-rating">Rating</th>
+                <th class="th-genres">Genres</th>
+                <th class="th-release">Release Date</th>
+                <th class="th-new">New</th>
+                <th class="th-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Admin Pagination -->
+        <nav class="pagination admin-pagination" id="adminPagination" aria-label="Admin pagination" hidden></nav>
+      </div>
+    </main>
+  </div>
+
+  <!-- Movie Form Modal -->
+  <div class="modal-backdrop admin-modal" id="movieFormModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="formModalTitle">
+    <div class="modal-dialog admin-form-dialog">
+      <button type="button" class="modal-close-btn" id="formCloseBtn" aria-label="Close form">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="admin-form-header">
+        <h2 id="formModalTitle">Add Movie</h2>
+      </div>
+      <form id="movieForm" class="admin-movie-form" novalidate>
+        <input type="hidden" id="formMovieId" />
+        <div class="form-section">
+          <h3 class="form-section-title">Basic Info</h3>
+          <div class="form-row">
+            <div class="form-group form-group--wide">
+              <label for="formTitle">Title *</label>
+              <input type="text" id="formTitle" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label for="formSlug">Slug</label>
+              <input type="text" id="formSlug" class="form-input" placeholder="auto-generated" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formTmdbId">TMDB ID</label>
+              <input type="number" id="formTmdbId" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="formYear">Year</label>
+              <input type="number" id="formYear" class="form-input" min="1888" max="2100" />
+            </div>
+            <div class="form-group">
+              <label for="formRating">Rating (0-10)</label>
+              <input type="number" id="formRating" class="form-input" min="0" max="10" step="0.1" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formVotes">Votes</label>
+              <input type="text" id="formVotes" class="form-input" placeholder="e.g. 12K" />
+            </div>
+            <div class="form-group">
+              <label for="formDuration">Duration</label>
+              <input type="text" id="formDuration" class="form-input" placeholder="e.g. 2h 30m" />
+            </div>
+            <div class="form-group">
+              <label for="formRuntime">Runtime (min)</label>
+              <input type="number" id="formRuntime" class="form-input" min="0" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="formTagline">Tagline</label>
+            <input type="text" id="formTagline" class="form-input" />
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Classification</h3>
+          <div class="form-row">
+            <div class="form-group form-group--wide">
+              <label for="formGenres">Genres (comma-separated)</label>
+              <input type="text" id="formGenres" class="form-input" placeholder="Action, Sci-Fi, Drama" />
+            </div>
+            <div class="form-group">
+              <label for="formReleaseDate">Release Date</label>
+              <input type="text" id="formReleaseDate" class="form-input" placeholder="YYYY-MM-DD" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="formDirector">Director</label>
+            <input type="text" id="formDirector" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label for="formCast">Cast (comma-separated)</label>
+            <input type="text" id="formCast" class="form-input" placeholder="Actor One, Actor Two" />
+          </div>
+          <div class="form-checkbox-row">
+            <label class="form-checkbox">
+              <input type="checkbox" id="formIsNewRelease" />
+              <span>New Release</span>
+            </label>
+            <label class="form-checkbox">
+              <input type="checkbox" id="formFeatured" />
+              <span>Featured</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Content</h3>
+          <div class="form-group">
+            <label for="formDescription">Description</label>
+            <textarea id="formDescription" class="form-input form-textarea" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="formFullOverview">Full Overview</label>
+            <textarea id="formFullOverview" class="form-input form-textarea" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Media</h3>
+          <div class="form-group">
+            <label for="formPoster">Poster URL</label>
+            <input type="url" id="formPoster" class="form-input" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label for="formBackdrop">Backdrop URL</label>
+            <input type="url" id="formBackdrop" class="form-input" placeholder="https://..." />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formTrailerKey">Trailer Key (YouTube)</label>
+              <input type="text" id="formTrailerKey" class="form-input" placeholder="Video ID" />
+            </div>
+            <div class="form-group form-group--wide">
+              <label for="formTrailerUrl">Trailer URL</label>
+              <input type="url" id="formTrailerUrl" class="form-input" placeholder="https://www.youtube.com/watch?v=..." />
+            </div>
+          </div>
+        </div>
+
+        <div id="formErrors" class="form-errors" style="display:none"></div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="formCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="formSubmitBtn">
+            <span class="btn-text">Save Movie</span>
+            <span class="btn-spinner" style="display:none"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bulk Import Modal -->
+  <div class="modal-backdrop admin-modal" id="bulkImportModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="bulkImportTitle">
+    <div class="modal-dialog admin-form-dialog">
+      <button type="button" class="modal-close-btn" id="bulkImportCloseBtn" aria-label="Close bulk import">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="admin-form-header">
+        <h2 id="bulkImportTitle">Bulk Import Movies</h2>
+      </div>
+      <div class="bulk-import-content">
+        <div class="bulk-import-upload" id="bulkImportUpload">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <p>Drag & drop a JSON file here, or</p>
+          <label class="btn btn-secondary" for="bulkFileInput">Choose JSON File</label>
+          <input type="file" id="bulkFileInput" accept=".json,application/json" style="display:none" />
+          <p class="bulk-import-hint">Max file size: 5MB. Must be a JSON array of movie objects.</p>
+        </div>
+        <div id="bulkImportPreview" class="bulk-import-preview" style="display:none">
+          <p id="bulkImportFileInfo"></p>
+          <div id="bulkImportStats" class="bulk-import-stats"></div>
+          <div id="bulkImportErrors" class="bulk-import-errors" style="display:none"></div>
+          <div class="bulk-import-actions">
+            <button type="button" class="btn btn-secondary" id="bulkImportCancelBtn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="bulkImportSubmitBtn" disabled>
+              <span class="btn-text">Import Movies</span>
+              <span class="btn-spinner" style="display:none"></span>
+            </button>
+          </div>
+        </div>
+        <div id="bulkImportResult" class="bulk-import-result" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop admin-modal" id="deleteConfirmModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="deleteConfirmTitle">
+    <div class="modal-dialog delete-confirm-dialog">
+      <div class="admin-form-header">
+        <h2 id="deleteConfirmTitle">Delete Movie</h2>
+      </div>
+      <p class="delete-confirm-text">Are you sure you want to delete "<span id="deleteMovieTitle"></span>"? This action cannot be undone.</p>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" id="deleteCancelBtn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="deleteConfirmBtn">
+          <span class="btn-text">Delete</span>
+          <span class="btn-spinner" style="display:none"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/admin.js"></script>
+</body>
+</html>

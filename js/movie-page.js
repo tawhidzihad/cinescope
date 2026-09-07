@@ -1,20 +1,18 @@
 // ==========================================================================
-// CineScope Standalone Movie Details Page Controller
+// CineScope Standalone Movie Details Page Controller — Backend API
 // ==========================================================================
 
-import { movies } from './data/movies.js';
 import { initTheme } from './features/theme.js';
 import { trailerPlayer } from './components/trailer-player.js';
 
 const FALLBACK_POSTER = './assets/images/poster-fallback.svg';
+const API_BASE = '/api';
 
 class MoviePageController {
   constructor() {
-    this.movies = movies;
     this.currentMovie = null;
     this.savedWatchlist = new Set(JSON.parse(localStorage.getItem('cinescope_watchlist') || '[]'));
 
-    // DOM references
     this.detailContainer = document.getElementById('movieDetailContainer');
     this.notFoundContainer = document.getElementById('notFoundContainer');
     this.pageTitle = document.getElementById('pageTitle');
@@ -36,11 +34,9 @@ class MoviePageController {
     this.init();
   }
 
-  init() {
-    // 1. Initialize Theme
+  async init() {
     initTheme();
 
-    // 2. Parse Movie ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = urlParams.get('id');
 
@@ -49,46 +45,66 @@ class MoviePageController {
       return;
     }
 
-    // 3. Find Movie by ID
-    const movie = this.movies.find(m => m.id.toLowerCase() === movieId.toLowerCase() || String(m.tmdbId) === movieId);
+    this.showLoading();
 
-    if (!movie) {
+    try {
+      const res = await fetch(`${API_BASE}/movies/${encodeURIComponent(movieId)}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.data) {
+        this.showNotFound();
+        return;
+      }
+
+      this.currentMovie = data.data;
+      this.renderMovieDetails(this.currentMovie);
+      this.initEventListeners();
+    } catch {
       this.showNotFound();
-      return;
     }
+  }
 
-    this.currentMovie = movie;
-    this.renderMovieDetails(movie);
-    this.initEventListeners();
+  showLoading() {
+    if (this.detailContainer) {
+      this.detailContainer.innerHTML = `
+        <div class="detail-loading">
+          <div class="detail-loading-backdrop skeleton-shimmer"></div>
+          <div class="container detail-layout">
+            <div class="detail-poster-col">
+              <div class="detail-poster-card skeleton-shimmer" style="aspect-ratio: 2/3;"></div>
+            </div>
+            <div class="detail-info-col">
+              <div class="skeleton-line skeleton-line-lg skeleton-shimmer" style="width: 60%; height: 2rem; margin-bottom: 1rem;"></div>
+              <div class="skeleton-line skeleton-line-md skeleton-shimmer" style="width: 40%; margin-bottom: 1.5rem;"></div>
+              <div class="skeleton-line skeleton-line-sm skeleton-shimmer" style="width: 80%; margin-bottom: 0.5rem;"></div>
+              <div class="skeleton-line skeleton-line-sm skeleton-shimmer" style="width: 70%; margin-bottom: 0.5rem;"></div>
+              <div class="skeleton-line skeleton-line-sm skeleton-shimmer" style="width: 90%;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
   }
 
   renderMovieDetails(movie) {
     if (this.detailContainer) this.detailContainer.style.display = 'block';
     if (this.notFoundContainer) this.notFoundContainer.style.display = 'none';
 
-    // Page Title & Meta
-    document.title = `${movie.title} (${movie.year}) — CineScope`;
-    if (this.pageTitle) this.pageTitle.textContent = `${movie.title} (${movie.year}) — CineScope`;
+    document.title = `${movie.title} (${movie.year || ''}) — CineScope`;
+    if (this.pageTitle) this.pageTitle.textContent = `${movie.title} (${movie.year || ''}) — CineScope`;
 
-    // Backdrop Image
     if (this.backdropImg) {
-      this.backdropImg.src = movie.backdrop || movie.poster;
+      this.backdropImg.src = movie.backdrop || movie.poster || FALLBACK_POSTER;
       this.backdropImg.alt = `${movie.title} backdrop`;
-      this.backdropImg.onerror = () => {
-        this.backdropImg.src = movie.poster || FALLBACK_POSTER;
-      };
+      this.backdropImg.onerror = () => { this.backdropImg.src = movie.poster || FALLBACK_POSTER; };
     }
 
-    // Poster Image
     if (this.posterImg) {
-      this.posterImg.src = movie.poster;
+      this.posterImg.src = movie.poster || FALLBACK_POSTER;
       this.posterImg.alt = `${movie.title} poster`;
-      this.posterImg.onerror = () => {
-        this.posterImg.src = FALLBACK_POSTER;
-      };
+      this.posterImg.onerror = () => { this.posterImg.src = FALLBACK_POSTER; };
     }
 
-    // Text details
     if (this.titleEl) this.titleEl.textContent = movie.title;
     if (this.taglineEl) {
       if (movie.tagline) {
@@ -99,28 +115,24 @@ class MoviePageController {
       }
     }
 
-    if (this.ratingEl) this.ratingEl.textContent = movie.rating.toFixed(1);
+    if (this.ratingEl) this.ratingEl.textContent = movie.rating ? movie.rating.toFixed(1) : 'N/A';
     if (this.votesEl) this.votesEl.textContent = `(${movie.votes || 'Top Pick'})`;
-    if (this.yearEl) this.yearEl.textContent = movie.year;
-    if (this.durationEl) this.durationEl.textContent = movie.duration;
+    if (this.yearEl) this.yearEl.textContent = movie.year || 'Unknown';
+    if (this.durationEl) this.durationEl.textContent = movie.duration || 'Unknown';
 
-    // Genres
     if (this.genresContainer) {
-      this.genresContainer.innerHTML = movie.genres
+      this.genresContainer.innerHTML = (movie.genres || [])
         .map(genre => `<span class="detail-genre-pill">${genre}</span>`)
         .join('');
     }
 
-    // Overview
     if (this.overviewEl) {
-      this.overviewEl.textContent = movie.fullOverview || movie.description;
+      this.overviewEl.textContent = movie.fullOverview || movie.description || 'No overview available.';
     }
 
-    // Cast & Crew
-    if (this.directorEl) this.directorEl.textContent = movie.director;
-    if (this.castEl) this.castEl.textContent = movie.cast.join(', ');
+    if (this.directorEl) this.directorEl.textContent = movie.director || 'Unknown';
+    if (this.castEl) this.castEl.textContent = (movie.cast || []).join(', ') || 'Unknown';
 
-    // Watchlist State
     this.updateWatchlistButton();
   }
 
@@ -131,16 +143,14 @@ class MoviePageController {
   }
 
   initEventListeners() {
-    // Trailer Button
     this.trailerBtn?.addEventListener('click', () => {
       if (!this.currentMovie) return;
       trailerPlayer.play(this.currentMovie, this.trailerBtn);
     });
 
-    // Watchlist Button
     this.watchlistBtn?.addEventListener('click', () => {
       if (!this.currentMovie) return;
-      this.toggleWatchlist(this.currentMovie.id);
+      this.toggleWatchlist(this.currentMovie._id || this.currentMovie.id);
     });
   }
 
@@ -156,21 +166,11 @@ class MoviePageController {
 
   updateWatchlistButton() {
     if (!this.watchlistBtn || !this.currentMovie) return;
-
-    const isSaved = this.savedWatchlist.has(this.currentMovie.id);
+    const movieId = this.currentMovie._id || this.currentMovie.id;
+    const isSaved = this.savedWatchlist.has(movieId);
     this.watchlistBtn.innerHTML = isSaved
-      ? `
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-        </svg>
-        Saved in Watchlist
-      `
-      : `
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-        </svg>
-        Add to Watchlist
-      `;
+      ? `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> Saved in Watchlist`
+      : `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Add to Watchlist`;
   }
 }
 
