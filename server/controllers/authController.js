@@ -89,9 +89,23 @@ export async function seedAdmin() {
       return;
     }
 
-    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+    const normalizedEmail = email.toLowerCase().trim();
+    // password uses `select: false`, so it must be explicitly included for
+    // the comparison below to work.
+    const existing = await User.findOne({ email: normalizedEmail }).select('+password');
+
     if (existing) {
-      console.log('Admin user already exists');
+      // Keep the stored password in sync with ADMIN_PASSWORD so the
+      // environment remains the single source of truth for the admin
+      // account (otherwise a stale hash silently breaks login forever).
+      const matches = await existing.comparePassword(password);
+      if (!matches) {
+        existing.password = password;
+        await existing.save();
+        console.log(`Admin password resynced for ${normalizedEmail}`);
+      } else {
+        console.log('Admin user already exists');
+      }
       return;
     }
 

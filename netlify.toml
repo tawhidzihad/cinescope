@@ -5,7 +5,10 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NPM_FLAGS = "--prefix=none"
+
+# Bundle the Express app (imported from ../../server.js) into the function
+[functions]
+  node_bundler = "esbuild"
 
 [[headers]]
   for = "/api/*"

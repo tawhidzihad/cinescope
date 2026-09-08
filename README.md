@@ -117,9 +117,9 @@ npm install
 Create a `.env` file:
 
 ```env
-MONGODB_URI=mongodb://localhost:27017/cinescope
-ADMIN_EMAIL=admin1234@gmail.com
-ADMIN_PASSWORD=pass1234@#
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/cinescope
+ADMIN_EMAIL=example@gmail.com
+ADMIN_PASSWORD=pass12344
 SESSION_SECRET=your-secure-session-secret
 PORT=3000
 ```
@@ -148,14 +148,63 @@ Visit `http://localhost:3000/admin` and log in with the credentials from your `.
 
 ## Deployment
 
-CineScope is now a full-stack application requiring a Node.js hosting environment. Options include:
+### Netlify (supported)
+
+The repository includes a full Netlify setup:
+
+- `netlify.toml` — build, functions, headers, and redirects
+- `netlify/functions/api.js` — wraps the Express app with `serverless-http`
+- `/api/*` requests are rewritten to `/.netlify/functions/api/*`
+
+Before deploying, set these environment variables in the Netlify dashboard
+(**Site settings → Environment variables**):
+
+```env
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/cinescope
+ADMIN_EMAIL=example@gmail.com
+ADMIN_PASSWORD=pass1234
+SESSION_SECRET=your-secure-session-secret
+```
+
+> **Note:** `netlify/functions/api.js` connects to MongoDB on the first request.
+> Without `MONGODB_URI` the static site still deploys, but API endpoints will
+> fail, so the database URI is required for the dynamic features
+> (search, pagination, admin dashboard, hero carousel).
+
+### Troubleshooting the deployed site
+
+If the deployed site shows "Unable to Load Movies" or login fails:
+
+1. Open `https://<your-site>.netlify.app/api/health` in a browser. It reports
+   whether the API function is reachable, whether the database is connected,
+   and which required environment variables are set (as booleans only).
+2. If `/api/health` itself fails, the function crashed before deploying
+   correctly — check **Deploys → Deploy log** and **Functions → api → Log**
+   in the Netlify dashboard.
+3. Confirm `MONGODB_URI`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and
+   `SESSION_SECRET` are all set under **Site configuration → Environment
+   variables**, then trigger a redeploy so the function picks them up.
+4. In MongoDB Atlas, make sure **Network Access** allows connections from
+   `0.0.0.0/0` — Netlify functions use dynamic outbound IPs, so a fixed
+   allowlist will block them (this usually works locally but fails in
+   production).
+5. Admin credentials come from `ADMIN_EMAIL` / `ADMIN_PASSWORD`; on boot the
+   server creates the admin if missing and resyncs the stored password if the
+   environment value changed. Note for local `.env` files: quote values that
+   contain `#` (e.g. `ADMIN_PASSWORD="pass@#1234"`), because dotenv treats
+   `#` as the start of an inline comment.
+
+### Alternative: always-on Node.js hosting
+
+The same codebase also runs as a traditional Node.js server (`npm start`), so it
+can be hosted on any Node runtime if preferred:
 
 - **Railway** — easiest MongoDB + Node.js hosting
 - **Render** — free tier available
 - **Fly.io** — container-based
 - **VPS** (DigitalOcean, Linode, etc.)
 
-Netlify is no longer suitable for the backend API server. The static frontend could be deployed separately, but the full application requires a Node.js runtime.
+For local development keep the `.env` file described in the [Setup](#setup) section.
 
 ## License
 

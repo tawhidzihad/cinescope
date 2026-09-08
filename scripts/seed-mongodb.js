@@ -3,57 +3,12 @@ import mongoose from 'mongoose';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+// Single source of truth: reuse the server's Movie model (schema, indexes,
+// and Mongoose 9-safe slug hook) instead of duplicating it here.
+import { Movie } from '../server/models/Movie.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-const movieSchema = new mongoose.Schema({
-  title: { type: String, required: true, trim: true },
-  slug: { type: String, unique: true, sparse: true, trim: true, lowercase: true },
-  tmdbId: { type: Number, unique: true, sparse: true },
-  tagline: { type: String, default: '' },
-  year: { type: Number },
-  rating: { type: Number, default: 0 },
-  votes: { type: String, default: '' },
-  duration: { type: String, default: '' },
-  runtime: { type: Number, default: 0 },
-  genres: [{ type: String }],
-  director: { type: String, default: '' },
-  cast: [{ type: String }],
-  description: { type: String, default: '' },
-  fullOverview: { type: String, default: '' },
-  poster: { type: String, default: '' },
-  backdrop: { type: String, default: '' },
-  trailerKey: { type: String, default: '' },
-  trailerUrl: { type: String, default: '' },
-  trailerSource: { type: String, default: 'youtube' },
-  isNewRelease: { type: Boolean, default: false },
-  releaseDate: { type: String, default: '' },
-  featured: { type: Boolean, default: false }
-}, { timestamps: true });
-
-movieSchema.index({ slug: 1 });
-movieSchema.index({ tmdbId: 1 });
-movieSchema.index({ releaseDate: -1 });
-movieSchema.index({ isNewRelease: 1 });
-movieSchema.index({ genres: 1 });
-movieSchema.index({ rating: -1 });
-movieSchema.index({ title: 'text', director: 'text', description: 'text' });
-
-movieSchema.pre('save', function(next) {
-  if (!this.slug) {
-    this.slug = this.title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
-    if (this.year) this.slug += `-${this.year}`;
-  }
-  next();
-});
-
-const Movie = mongoose.model('Movie', movieSchema);
 
 async function seed() {
   const uri = process.env.MONGODB_URI;
@@ -63,8 +18,11 @@ async function seed() {
   }
 
   try {
-    await mongoose.connect(uri);
-    console.log('Connected to MongoDB');
+    // Match the server's db.js: pin dbName, never fall back to `test`.
+    await mongoose.connect(uri, {
+      dbName: process.env.MONGODB_DB || 'cinescope'
+    });
+    console.log(`Connected to MongoDB (db: ${mongoose.connection.name})`);
 
     const dataPath = join(__dirname, '..', 'js', 'data', 'movies.js');
     const rawContent = readFileSync(dataPath, 'utf-8');

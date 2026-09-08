@@ -159,7 +159,16 @@ export async function updateMovie(req, res) {
   try {
     const { id } = req.params;
 
-    const validation = validateMovie(req.body);
+    const existing = await Movie.findById(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Movie not found' });
+    }
+
+    // Merge the partial payload with the existing document so that partial
+    // updates (e.g. { rating, isNewRelease }) validate against a complete record.
+    const merged = { ...existing.toObject(), ...req.body };
+
+    const validation = validateMovie(merged);
     if (!validation.isValid) {
       return res.status(400).json({
         success: false,
@@ -187,13 +196,9 @@ export async function updateMovie(req, res) {
     }
 
     const movie = await Movie.findByIdAndUpdate(id, updateData, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true
     });
-
-    if (!movie) {
-      return res.status(404).json({ success: false, message: 'Movie not found' });
-    }
 
     res.json({ success: true, data: movie });
   } catch (err) {

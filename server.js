@@ -7,7 +7,7 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { connectDB } from './server/config/db.js';
+import { connectDB, isConnected } from './server/config/db.js';
 import { seedAdmin } from './server/controllers/authController.js';
 import movieRoutes from './server/routes/movieRoutes.js';
 import authRoutes from './server/routes/authRoutes.js';
@@ -17,6 +17,12 @@ const __dirname = path.dirname(__filename);
 
 export function createApp() {
   const app = express();
+
+  // Behind Netlify (or any reverse proxy) TLS is terminated upstream. Trusting
+  // the proxy makes `req.secure` honor `X-Forwarded-Proto`, which is required
+  // for express-session to actually set its `Secure` cookie in production —
+  // without this, login succeeds but the session cookie is never stored.
+  app.set('trust proxy', 1);
 
   app.use(helmet({
     contentSecurityPolicy: false,
@@ -93,6 +99,23 @@ export function createApp() {
     });
   }
 
+  // Lightweight diagnostic endpoint: reports connectivity and which required
+  // environment variables are present (booleans only — never their values).
+  app.get('/api/health', (req, res) => {
+    res.json({
+      success: true,
+      data: {
+        dbConnected: isConnected(),
+        env: {
+          MONGODB_URI: Boolean(process.env.MONGODB_URI),
+          SESSION_SECRET: Boolean(process.env.SESSION_SECRET),
+          ADMIN_EMAIL: Boolean(process.env.ADMIN_EMAIL),
+          ADMIN_PASSWORD: Boolean(process.env.ADMIN_PASSWORD)
+        }
+      }
+    });
+  });
+
   app.use('/api/auth', authRoutes);
   app.use('/api/movies', movieRoutes);
 
@@ -137,4 +160,14 @@ async function start() {
   }
 }
 
-start();
+// Only start the HTTP server when this file runs directly (`node server.js`).
+// When imported as a module — e.g. by the Netlify function
+// (netlify/functions/api.js) — we must NOT call app.listen() or force a
+// database connection at import time, otherwise the function fails to boot.
+const isMainModule = process.argv[1]
+  ? fileURLToPath(import.meta.url) === path.resolve(process.argv[1])
+  : false;
+
+if (isMainModule) {
+  start();
+}
