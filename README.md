@@ -134,15 +134,57 @@ Visit `http://localhost:3000/admin` and log in with the credentials from your `.
 
 ## Deployment
 
-### Vercel (supported)
+### Vercel — dashboard flow (recommended)
 
-- Frontend + backend ship together: `app/api/[[...path]]/route.js` mounts the
-  Express app via `serverless-http`.
-- Set `MONGODB_URI`, `MONGODB_DB`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`,
-  `SESSION_SECRET`, and `NEXT_PUBLIC_SITE_URL` in the Vercel dashboard
-  (**Project → Settings → Environment Variables**).
-- `npm run build` must succeed; dynamic routes and `/admin` work on Vercel
-  with MongoDB reached through environment variables.
+Vercel deploys this repo with **zero extra config**: `vercel.json`
+declares the Next.js framework + build, `next.config.mjs` keeps the
+server-only packages external, and `app/api/[[...path]]/route.js`
+mounts the Express backend (`backend/app.js`) via `serverless-http`.
+Public pages use the server data layer (`lib/server-data.js` →
+`backend/services/*` → MongoDB) and the admin dashboard + external
+clients use the same Express API under `/api/*`. There is no separate
+server to host — **frontend + integrated server ship as one Vercel
+project**.
+
+> Backend changes (routes/controllers/services under `backend/`) take
+> effect on Vercel automatically on the next deploy — no separate
+> "server deploy" step. Locally, preview the same behavior with
+> `npm run backend` (port 5000) or `npm run backend:dev` for hot reload.
+
+1. **Import the repo** — go to <https://vercel.com/new>, choose
+   **Import Git Repository**, select `tawhidzihad/cinescope`, keep
+   Framework = **Next.js**, Build Command = `next build`
+   (both auto-detected from `vercel.json` / `package.json`).
+2. **Add environment variables** before pressing Deploy
+   (**Project → Settings → Environment Variables**, apply to
+   **Production**; repeat for Preview if you want staging to work):
+
+   | Variable | Value |
+   |----------|-------|
+   | `MONGODB_URI` | Your Atlas connection string, e.g. `mongodb+srv://user:pass@cluster.mongodb.net/?retryWrites=true&w=majority` |
+   | `MONGODB_DB` | `cinescope` |
+   | `ADMIN_EMAIL` | admin login email |
+   | `ADMIN_PASSWORD` | admin login password |
+   | `SESSION_SECRET` | long random string (session signing) |
+   | `NEXT_PUBLIC_SITE_URL` | `https://<your-site>.vercel.app` (fix after first deploy, then redeploy) |
+
+3. **Deploy**, then open `https://<your-site>.vercel.app/api/health`
+   — expect `{"success":true,"data":{"status":"ok"}}`.
+4. **MongoDB Atlas access** — under **Network Access**, allow the
+   deployment (e.g. `0.0.0.0/0` for dynamic serverless IPs), and make
+   sure the DB user in `MONGODB_URI` has read/write on `MONGODB_DB`.
+5. **Seed the catalog** (one time, from your machine with the same
+   `MONGODB_URI` in local `.env`):
+   `npm run seed` (insert missing) or `npm run seed -- --upsert`
+   (also refresh existing). Verify with
+   `https://<your-site>.vercel.app/api/movies?limit=1`.
+6. **Log in** at `https://<your-site>.vercel.app/admin` with
+   `ADMIN_EMAIL` / `ADMIN_PASSWORD`. The API bridge seeds/refreshes
+   the hashed admin from env on boot, so rotating the env password
+   just needs a redeploy.
+
+> `.env*` (except `.env.example`) is git-ignored — never commit real
+> values; Vercel env vars are the production source of truth.
 
 ### Troubleshooting the deployed site
 
