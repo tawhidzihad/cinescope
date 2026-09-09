@@ -1,0 +1,369 @@
+// ==========================================================================
+// Next.js App Additions — skeletons, Swiper hero, admin form extras
+// ==========================================================================
+// Complements the migrated 7-1 SCSS system without modifying existing files.
+
+@use 'abstracts/variables' as *;
+@use 'abstracts/mixins' as *;
+
+// ---------------------------------------------------------------------------
+// Skeletons / Loading
+// ---------------------------------------------------------------------------
+.skeleton-line {
+    display: block;
+    height: 1rem;
+    border-radius: $radius-sm;
+    background: linear-gradient(90deg,
+            var(--bg-surface-elevated) 25%,
+            var(--bg-card-hover) 50%,
+            var(--bg-surface-elevated) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-block {
+    display: block;
+    border-radius: $radius-md;
+    background: linear-gradient(90deg,
+            var(--bg-surface-elevated) 25%,
+            var(--bg-card-hover) 50%,
+            var(--bg-surface-elevated) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.movie-card-skeleton {
+    pointer-events: none;
+
+    .card-poster {
+        aspect-ratio: 2 / 3;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-2;
+        padding: $spacing-3;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .skeleton-line,
+    .skeleton-block,
+    .admin-skeleton-table .skeleton-row {
+        animation: none;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Movie Card link wrapper (Next.js migration)
+// ---------------------------------------------------------------------------
+.card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+
+    &:focus-visible {
+        outline: 2px solid var(--accent-primary);
+        outline-offset: 2px;
+        border-radius: $radius-md;
+    }
+}
+
+.card-poster-img {
+    object-fit: cover;
+}
+
+// ---------------------------------------------------------------------------
+// Swiper Hero controls
+// ---------------------------------------------------------------------------
+.hero-swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.hero-swiper-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-4;
+    margin-top: $spacing-4;
+}
+
+.hero-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-full;
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background $transition-fast, border-color $transition-fast;
+
+    &:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--accent-primary);
+    }
+}
+
+.hero-swiper-pagination {
+    position: static !important;
+    display: flex;
+    gap: $spacing-2;
+
+    .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        background: var(--text-muted);
+        opacity: 0.4;
+        transition: opacity $transition-fast, width $transition-fast;
+    }
+
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+        width: 22px;
+        border-radius: $radius-full;
+        background: var(--accent-primary);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Pagination disabled state (link-based pagination)
+// ---------------------------------------------------------------------------
+.pagination-nav.is-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+// ---------------------------------------------------------------------------
+// Admin: form sections & helpers
+// ---------------------------------------------------------------------------
+.form-section {
+    border: 1px solid var(--border-subtle);
+    border-radius: $radius-md;
+    padding: $spacing-4;
+    margin: 0 0 $spacing-4;
+
+    legend {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        padding: 0 $spacing-2;
+    }
+}
+
+.form-row {
+    display: flex;
+    gap: $spacing-3;
+    flex-wrap: wrap;
+
+    >.form-group {
+        flex: 1 1 160px;
+    }
+}
+
+.form-grow {
+    flex: 2 1 220px !important;
+}
+
+.form-checkbox {
+    display: flex;
+    flex-direction: column;
+
+    .switch-wrap {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        min-height: 40px;
+
+        input[type='checkbox'] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-primary);
+        }
+    }
+
+    .switch-label {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+    }
+}
+
+.form-error {
+    color: #ef4444;
+    font-size: 0.8125rem;
+    margin: $spacing-1 0 0;
+}
+
+.form-hint {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    margin: $spacing-1 0 0;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.admin-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-3;
+    margin-top: $spacing-5;
+}
+
+.admin-confirm-dialog {
+    max-width: 440px;
+
+    h2 {
+        margin: 0 0 $spacing-3;
+    }
+
+    p {
+        color: var(--text-secondary);
+        margin: 0 0 $spacing-2;
+    }
+}
+
+.admin-pagination-info {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.admin-pagination {
+    margin-top: $spacing-5;
+    justify-content: center;
+}
+
+// Bulk import preview
+.bulk-preview {
+    border: 1px solid var(--border-subtle);
+    border-radius: $radius-md;
+    padding: $spacing-4;
+    margin-bottom: $spacing-4;
+}
+
+.bulk-preview-summary {
+    margin-bottom: $spacing-3;
+}
+
+.bulk-problems {
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    border-radius: $radius-md;
+    padding: $spacing-3 $spacing-4;
+
+    h3 {
+        font-size: 0.9375rem;
+        margin: 0 0 $spacing-2;
+        color: #ef4444;
+    }
+
+    ul {
+        margin: 0;
+        padding-left: $spacing-5;
+        color: var(--text-secondary);
+        font-size: 0.8125rem;
+    }
+}
+
+.bulk-preview-ok {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+// ---------------------------------------------------------------------------
+// Mobile drawer open state (Next.js client toggle)
+// ---------------------------------------------------------------------------
+.mobile-drawer.is-open {
+    transform: translateY(0);
+    visibility: visible;
+    opacity: 1;
+}
+
+.mobile-menu-toggle.is-active {
+    span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    span:nth-child(2) {
+        opacity: 0;
+    }
+
+    span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+}
+
+// Trailer modal (reuses modal conventions)
+.trailer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: $z-index-modal;
+    background: var(--modal-backdrop, rgba(0, 0, 0, 0.85));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-4;
+    animation: fadeIn 0.2s $ease-out-smooth both;
+}
+
+.trailer-dialog {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+}
+
+.trailer-player-wrapper {
+    position: relative;
+    padding-top: 56.25%; // 16:9
+    border-radius: $radius-lg;
+    overflow: hidden;
+    background: #000;
+
+    iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+}
+
+.trailer-close-btn {
+    position: absolute;
+    top: -$spacing-10;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-full;
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--accent-primary);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

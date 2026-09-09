@@ -1,0 +1,37 @@
+// ==========================================================================
+// Main SCSS Entry Point - CineScope Movie Discovery
+// ==========================================================================
+
+// 1. Abstracts (Variables, Mixins, Functions)
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
+@use 'abstracts/functions';
+
+// 2. Base (Reset, Typography, Global & Theme Variables)
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/global';
+
+// 3. Components
+@use 'components/buttons';
+@use 'components/navbar';
+@use 'components/theme-toggle';
+@use 'components/movie-card';
+@use 'components/modal';
+@use 'components/filters';
+@use 'components/pagination';
+@use 'components/loading-state';
+@use 'components/empty-state';
+@use 'components/toast';
+@use 'components/trailer-player';
+@use 'components/admin';
+
+// 4. Sections
+@use 'sections/hero';
+@use 'sections/movies';
+@use 'sections/footer';
+@use 'sections/movie-detail';
+@use 'sections/not-found';
+
+// 5. Next.js App additions (skeletons, Swiper hero, admin forms)
+@use 'next-app';
