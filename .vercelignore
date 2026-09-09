@@ -1,0 +1,4 @@
+# Never upload local env files with deployments — use Vercel project env vars
+.env
+.env.*
+!.env.example
