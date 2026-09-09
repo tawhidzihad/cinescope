@@ -27,3 +27,5 @@ yarn-error.log*
 
 # legacy build output
 css/main.css
+.vercel
+.env*

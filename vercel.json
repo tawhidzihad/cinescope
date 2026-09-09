@@ -1,12 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "buildCommand": "next build",
-  "installCommand": "npm install",
-  "regions": ["iad1"],
-  "functions": {
-    "app/api/[[...path]]/route.js": {
-      "maxDuration": 15
+  "services": {
+    "frontend": {
+      "root": "./",
+      "framework": "nextjs",
+      "buildCommand": "next build",
+      "installCommand": "npm install",
+      "functions": {
+        "app/api/[[...path]]/route.js": {
+          "maxDuration": 15
+        }
+      }
     }
-  }
+  },
+  "regions": ["iad1"]
 }
