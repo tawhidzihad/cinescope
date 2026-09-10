@@ -13,6 +13,11 @@ const nextConfig = {
         'cors'
     ],
     images: {
+        // Vercel's services-mode deployments do not provide the /_next/image
+        // optimizer function yet, so render remote images unoptimized (TMDB
+        // already serves correctly sized variants). remotePatterns are kept
+        // so the config is ready if optimization is enabled later.
+        unoptimized: true,
         remotePatterns: [
             {
                 protocol: 'https',
