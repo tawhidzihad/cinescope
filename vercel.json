@@ -13,5 +13,11 @@
       }
     }
   },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": { "service": "frontend" }
+    }
+  ],
   "regions": ["iad1"]
 }
