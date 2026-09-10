@@ -47,9 +47,19 @@ export async function getDb() {
             serverSelectionTimeoutMS: 8000,
             maxPoolSize: 10
         });
-        // Cache the connection promise immediately so concurrent requests on a
-        // cold start share a single connection attempt.
-        clientPromise = client.connect().then(() => client);
+        // Cache the connect attempt immediately so concurrent cold-start
+        // requests share it — but CLEAR it on failure so the next invocation
+        // starts a fresh attempt instead of awaiting the same rejected
+        // promise forever (poisoned warm instance).
+        clientPromise = client.connect().then(
+            () => client,
+            (err) => {
+                clientPromise = null;
+                const target = String(uri).replace(/^[^:]+:\/\/[^@]+@/, '<credentials>@').split('?')[0];
+                console.error('[db] MongoDB connect failed:', err?.name, err?.code ?? '', '-', err?.message, '| target:', target);
+                throw err;
+            }
+        );
     }
 
     const client = await clientPromise;

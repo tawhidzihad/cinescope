@@ -23,7 +23,12 @@ async function boot() {
         bootPromise = (async () => {
             await getDb();
             await seedAdmin();
-        })();
+        })().catch((err) => {
+            // Reset so the next request retries boot instead of re-throwing
+            // the same cached failure (e.g. transient DB/network issues).
+            bootPromise = null;
+            throw err;
+        });
     }
     await bootPromise;
 }
@@ -32,9 +37,17 @@ async function handle(request) {
     try {
         await boot();
     } catch (err) {
-        console.error('API boot error:', err.message);
+        console.error('API boot error:', err?.name, err?.code ?? '', '-', err?.message);
         return Response.json(
-            { success: false, message: 'Backend database is unavailable. Please try again later.' },
+            {
+                success: false,
+                message: 'Backend database is unavailable. Please try again later.',
+                error: {
+                    name: err?.name ?? 'Error',
+                    code: err?.code ?? null,
+                    detail: err?.message ?? String(err)
+                }
+            },
             { status: 500 }
         );
     }

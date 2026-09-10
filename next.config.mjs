@@ -18,6 +18,16 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'image.tmdb.org',
                 pathname: '/t/p/**'
+            },
+            {
+                protocol: 'https',
+                hostname: 'img.youtube.com',
+                pathname: '/vi/**'
+            },
+            {
+                protocol: 'https',
+                hostname: 'i.ytimg.com',
+                pathname: '/vi/**'
             }
         ]
     }
