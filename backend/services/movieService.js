@@ -179,6 +179,31 @@ export async function getLatestReleases(limit = 6) {
     return { movies: fallback, isFallback: true };
 }
 
+// ---------------------------------------------------------------------------
+// Popular movies — ranked by audience votes (stored as strings like "9K" or
+// "1.2M") with rating as the tiebreaker. The catalog is compact, so ranking
+// in memory keeps this simple and dependency-free.
+// ---------------------------------------------------------------------------
+function parseVoteCount(votes) {
+    if (typeof votes !== 'string') return 0;
+    const match = votes.trim().toUpperCase().match(/^([\d.]+)\s*([KM])?$/);
+    if (!match) return 0;
+    const value = Number.parseFloat(match[1]);
+    if (!Number.isFinite(value)) return 0;
+    return value * (match[2] === 'M' ? 1000000 : match[2] === 'K' ? 1000 : 1);
+}
+
+export async function getPopularMovies(limit = 12) {
+    const db = await getDb();
+    const movies = await db.collection(COLLECTION).find({}).toArray();
+
+    return movies
+        .map((movie) => ({ movie, voteCount: parseVoteCount(movie.votes) }))
+        .sort((a, b) => (b.voteCount - a.voteCount) || ((b.movie.rating || 0) - (a.movie.rating || 0)))
+        .slice(0, limit)
+        .map((entry) => entry.movie);
+}
+
 export async function getGenresWithCounts() {
     const db = await getDb();
     return db.collection(COLLECTION).aggregate([
