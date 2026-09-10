@@ -27,9 +27,21 @@ export async function seedAdmin() {
     const passwordHash = await bcrypt.hash(password, 12);
 
     if (existing) {
+        // Legacy documents (from the old Mongoose backend) store the hash
+        // under `password` instead of `passwordHash` — migrate them in place
+        // so bcrypt.compare never receives `undefined`.
+        let currentHash = existing.passwordHash;
+        if (currentHash === undefined && existing.password) {
+            await collection.updateOne(
+                { _id: existing._id },
+                { $set: { passwordHash: existing.password, updatedAt: new Date() }, $unset: { password: '' } }
+            );
+            currentHash = existing.password;
+        }
+
         // Keep the stored hash in sync with ADMIN_PASSWORD so the environment
         // remains the single source of truth for the admin account.
-        if (!(await bcrypt.compare(password, existing.passwordHash))) {
+        if (!currentHash || !(await bcrypt.compare(password, currentHash))) {
             await collection.updateOne(
                 { _id: existing._id },
                 { $set: { passwordHash, updatedAt: new Date() } }
@@ -63,7 +75,11 @@ export async function verifyCredentials(email, password) {
         return null;
     }
 
-    const isMatch = await bcrypt.compare(String(password), user.passwordHash);
+    // Fall back to the legacy `password` field for pre-migration documents.
+    const storedHash = user.passwordHash ?? user.password;
+    if (!storedHash) return null;
+
+    const isMatch = await bcrypt.compare(String(password), storedHash);
     if (!isMatch) return null;
 
     return { id: user._id, email: user.email, role: user.role };
